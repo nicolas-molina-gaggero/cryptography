@@ -1,10 +1,11 @@
 from enum import Enum, auto
+from collections import defaultdict
 from functools import reduce
 from operator import mul
-from typing import List, Self
+from typing import List, Self, DefaultDict, Optional
 import random
 import bisect
-from math import gcd
+from math import gcd, isqrt
 from modular import pow_mod
 
 class Primality(Enum):
@@ -32,6 +33,33 @@ def sieve(limit: int) -> List[int]:
         if is_prime[p]:
             primes.append(p)
     return primes
+
+def naive_factor(n: int) -> Optional[DefaultDict[int, int]]:
+    """
+    Attemps to factor a number by trying all small primes.
+    Args:
+        n (int): number to be factored
+    Result:
+        A defaultdict with the factorization (keys are the factors and the values are the powers).
+        and None if was not possible to completely factor (it doesn't return the partial factor)
+    """
+    factors = defaultdict(int)
+    max_prime = min(isqrt(n), 2_000_000) + 1
+    primes = sieve(max_prime)
+
+    for prime in primes:
+        if prime*prime > n:
+            factors[n] += 1
+            return factors
+        while n % prime == 0:
+            factors[prime] += 1
+            n //= prime
+        if n == 1:
+            return factors
+    if miller_rabin(n, 40) != Primality.Composite:
+        factors[n] += 1
+        return factors
+    return None
 
 class PrimeGenerator:
     '''

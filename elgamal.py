@@ -1,6 +1,6 @@
 from math import gcd
 from typing import Self, Tuple
-from primes import PrimeGenerator
+from primes import PrimeGenerator, naive_factor
 from modular import inverse_mod, pow_mod
 import random
 
@@ -20,13 +20,17 @@ class ElGamalDecryptor:
         self._g = g
         self._generate_keys()
 
-    def decrypt(self: Self, c: Tuple[int, int]):
+    def decrypt(self: Self, c: Tuple[int, int]) -> int:
         '''
         Given a message m is encrypted as
         c1 = g^x (mod p)
         c2 = m*(k_pub)^x (mod p)
         we can decrypt it as 
         m = c1*(c2)^{-k_priv} (mod p)
+        Args:
+            c (int,int): Tuple with the encrypted messages
+        Result:
+            the decrypted message
         '''
         c1, c2 = c
         temp = inverse_mod(pow_mod(c1, self._priv, self._p), self._p)
@@ -35,6 +39,9 @@ class ElGamalDecryptor:
         return (c2 * temp) % self._p
 
     def get_pub(self: Self) -> int:
+        """
+        Returns the public key.
+        """
         return self._pub
 
 class ElGamalEncryptor:
@@ -53,7 +60,15 @@ class ElGamalEncryptor:
 
 def main():
     pg = PrimeGenerator(11, 2000)
-    p = pg.random_prime(2**255, 2**256)
+    p = pg.random_prime(2**127, 2**128)
+    q = (p - 1) // 2
+    fact = naive_factor(q)
+
+    if fact is not None:
+        print(fact)
+    else:
+        print("Couldn't factor it")
+
     g = 2
     alice = ElGamalDecryptor(p, g)
     pub = alice.get_pub()
