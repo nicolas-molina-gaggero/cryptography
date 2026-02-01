@@ -41,7 +41,6 @@ class PrimeGenerator:
 
     def __init__(self: Self, max_prefilter: int = 7, max_small_prime: int = 100, rounds: int = 40):
         primes = sieve(max_small_prime)
-        print(primes)
         index = bisect.bisect_right(primes, max_prefilter)
         self.prefilter = reduce(mul, primes[:index])
         self.small_primes_prod = reduce(mul, primes[index:])

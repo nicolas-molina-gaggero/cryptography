@@ -1,7 +1,8 @@
 from math import gcd
 from typing import Self
-from primes import *
-from modular import *
+from primes import PrimeGenerator
+from modular import inverse_mod, pow_mod
+import random
 
 class RSADecryptor:
     '''
@@ -13,7 +14,7 @@ class RSADecryptor:
         assert bits > 0, "Bits must be a positive integer."
         lower = 1 << bits
         upper = lower << 1
-        pg = PrimeGenerator(5, 30)
+        pg = PrimeGenerator(11, 1000)
         p = pg.random_prime(lower, upper)
         while (q := pg.random_prime(lower, upper)) == p:
             pass
@@ -22,7 +23,7 @@ class RSADecryptor:
         phi = ((p - 1)*(q - 1)) // g
 
         while True:
-            self._priv = random.randint(2,phi - 1)
+            self._priv = random.randint(2,phi - 1) # we exclude trivial values 0, 1, -1
             if (pub := inverse_mod(self._priv, phi)) is not None:
                 break
         self._pub = pub
@@ -51,10 +52,8 @@ class RSAEncryptor:
     def encrypt(self: Self, message: int):
         return pow_mod(message, self._pub, self._n)
 
-
-
 def main():
-    alice = RSADecryptor(1024)
+    alice = RSADecryptor(1024) # the key is 2*1024 = 2048 bits
     n = alice.get_mod()
     pub = alice.get_pub()
     bob = RSAEncryptor(pub, n)
