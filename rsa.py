@@ -3,7 +3,10 @@ from typing import Self
 from primes import *
 from modular import *
 
-class RCADecryptor:
+class RSADecryptor:
+    '''
+    Class that implements an RSA decryptor with a public and private keys
+    '''
     __slots__ = ['_n', '_pub', '_priv']
     # Private
     def _generate_keys(self: Self, bits: int):
@@ -38,7 +41,7 @@ class RCADecryptor:
     def get_mod(self: Self) -> int:
         return self._n
 
-class RCAEncryptor:
+class RSAEncryptor:
     __slots__ = ['_n', '_pub']
     # Public
     def __init__(self: Self, pub: int, n: int):
@@ -51,10 +54,10 @@ class RCAEncryptor:
 
 
 def main():
-    alice = RCADecryptor(1024)
+    alice = RSADecryptor(1024)
     n = alice.get_mod()
     pub = alice.get_pub()
-    bob = RCAEncryptor(pub, n)
+    bob = RSAEncryptor(pub, n)
     message = random.randint(2, n - 1)
     cipher_text = bob.encrypt(message)
     deciphered = alice.decrypt(cipher_text)

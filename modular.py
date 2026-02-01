@@ -18,7 +18,13 @@ def inverse_mod(a: int, m: int) -> Optional[int]:
 
 def pow_mod(a: int,b: int,n: int) -> int:
     '''
-    Computes a**b (mod n) efficiently
+    Computes a**b (mod n) efficiently with squaring
+    Args:
+        a: base
+        b: exponent
+        n: modulus
+    Returns:
+        a**b (mod n)
     '''
     if b == 0:
         return 1
