@@ -80,7 +80,7 @@ class PrimeGenerator:
     so its not appropiate for many ciphers.
     Args:
         lower: lower limit to generate the prime
-        upper: upper limit to gtenerate the prime
+        upper: upper limit to generate the prime
     Returns:
         A likely prime
     '''
@@ -91,8 +91,18 @@ class PrimeGenerator:
                 continue
             if miller_rabin(c, self.rounds) != Primality.Composite:
                 return c
-    # def random_safe_prime(self: Self, lower: int, upper: int) -> int:
-    #     pass
+
+    def random_safe_prime(self: Self, lower: int, upper: int) -> int:
+        while True:
+            q = self.prefilter*random.randint(lower//self.prefilter //2, upper//self.prefilter // 2) + random.choice(self.offsets)
+            p = 2*q + 1
+            if gcd(self.small_primes_prod, q) > 1 or gcd(self.small_primes_prod, p) > 1:
+                continue
+            if miller_rabin(q, 1) == Primality.Composite or miller_rabin(p, 1) == Primality.Composite:
+                continue
+            if miller_rabin(q, self.rounds) == Primality.Composite or miller_rabin(p, self.rounds) == Primality.Composite:
+                continue
+            return p
 
 def miller_rabin(n: int, rounds: int) -> Primality:
     '''

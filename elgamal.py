@@ -1,4 +1,3 @@
-from math import gcd
 from typing import Self, Tuple
 from primes import PrimeGenerator, naive_factor
 from modular import inverse_mod, pow_mod
@@ -60,7 +59,8 @@ class ElGamalEncryptor:
 
 def main():
     pg = PrimeGenerator(11, 2000)
-    p = pg.random_prime(2**127, 2**128)
+    p = pg.random_safe_prime(2**1023, 2**1024 - 1)
+    print(f'{p=}')
     q = (p - 1) // 2
     fact = naive_factor(q)
 
