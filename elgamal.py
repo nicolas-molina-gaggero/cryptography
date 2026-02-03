@@ -1,7 +1,9 @@
 from typing import Self, Tuple
 from primes import PrimeGenerator, naive_factor
-from modular import inverse_mod, pow_mod
 import random
+from modular import inverse_mod
+
+random.seed(42)
 
 class ElGamalDecryptor:
     '''
@@ -11,7 +13,7 @@ class ElGamalDecryptor:
     # Private
     def _generate_keys(self: Self):
         self._priv = random.randint(2, self._p - 1)
-        self._pub = pow_mod(self._g, self._priv, self._p)
+        self._pub = pow(self._g, self._priv, self._p)
 
     # Public
     def __init__(self: Self, p: int, g: int):
@@ -32,7 +34,7 @@ class ElGamalDecryptor:
             the decrypted message
         '''
         c1, c2 = c
-        temp = inverse_mod(pow_mod(c1, self._priv, self._p), self._p)
+        temp = inverse_mod(pow(c1, self._priv, self._p), self._p)
         if temp is None:
             raise RuntimeError("")
         return (c2 * temp) % self._p
@@ -53,13 +55,13 @@ class ElGamalEncryptor:
 
     def encrypt(self: Self, message: int):
         x = random.randint(2, self._p - 1)
-        c1 = pow_mod(self._g, x, self._p)
-        c2 = (message * pow_mod(self._pub, x, self._p)) % self._p
+        c1 = pow(self._g, x, self._p)
+        c2 = (message * pow(self._pub, x, self._p)) % self._p
         return (c1, c2)
 
 def main():
     pg = PrimeGenerator(11, 2000)
-    p = pg.random_safe_prime(2**1023, 2**1024 - 1)
+    p = pg.random_safe_prime(2**767, 2**768 - 1)
     print(f'{p=}')
     q = (p - 1) // 2
     fact = naive_factor(q)

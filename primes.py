@@ -6,7 +6,6 @@ from typing import List, Self, DefaultDict, Optional
 import random
 import bisect
 from math import gcd, isqrt
-from modular import pow_mod
 
 class Primality(Enum):
     '''
@@ -153,7 +152,7 @@ def one_round_miller_rabin(n: int) -> Primality:
     while (q % 2 == 0):
         q //= 2
         k += 1
-    a = pow_mod(a, q, n)
+    a = pow(a, q, n)
     if a == 1:
         return Primality.ProbablyPrime
     for _ in range(k):

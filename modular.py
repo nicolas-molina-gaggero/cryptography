@@ -15,25 +15,3 @@ def inverse_mod(a: int, m: int) -> Optional[int]:
         return None
 
     return u0 if u0 > 0 else u0 + m
-
-def pow_mod(a: int,b: int,n: int) -> int:
-    '''
-    Computes a**b (mod n) efficiently with squaring
-    Args:
-        a: base
-        b: exponent
-        n: modulus
-    Returns:
-        a**b (mod n)
-    '''
-    if b == 0:
-        return 1
-    if b == 1:
-        return a % n
-    result = 1
-    while (b > 0):
-        if b % 2 == 1:
-            result = (result * a) % n
-        a = (a*a) % n
-        b >>= 1
-    return result

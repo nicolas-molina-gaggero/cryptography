@@ -1,7 +1,7 @@
 from math import gcd
 from typing import Self
 from primes import PrimeGenerator
-from modular import inverse_mod, pow_mod
+from modular import inverse_mod
 import random
 
 class RSADecryptor:
@@ -34,7 +34,7 @@ class RSADecryptor:
         self._generate_keys(bits)
 
     def decrypt(self: Self, cipher_text: int):
-        return pow_mod(cipher_text, self._priv, self._n)
+        return pow(cipher_text, self._priv, self._n)
 
     def get_pub(self: Self) -> int:
         return self._pub
@@ -50,7 +50,7 @@ class RSAEncryptor:
         self._pub = pub
 
     def encrypt(self: Self, message: int):
-        return pow_mod(message, self._pub, self._n)
+        return pow(message, self._pub, self._n)
 
 def main():
     alice = RSADecryptor(1024) # the key is 2*1024 = 2048 bits
